@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week08</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <h2>제한시간 내에 문자 입력하기</h2>
+    <div id="app">
+        <p>금지문자(,로 나누어 복수입력 가능) 
+            <input :disabled="rvsDisabled" v-model="myText" type="text">
+        </p>
+        <p>제한시간을 입력하세요 (초) 
+            <input :disabled="rvsDisabled" v-model="myNumber" type="number"> 
+            <button @click="startCount">시작</button>
+        </p>
+        <p>남은 시간 {{ restSec }}초</p>
+        <textarea :disabled="disabled" v-model="inputText"></textarea>
+        <p :style="{ display: display }">{{ txtCount }}개의 문자를 입력하였습니다.</p>
+        <p :style="{ display: display }">벌점 : {{ fbnCount*12 }} (금지문자 1개당 12점)</p>
+    </div>
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            myText: '바보',
+            myNumber: 10,
+            restSec: 10,
+            rvsDisabled: false,
+            disabled: true,
+            inputText: '',
+            display: 'none',
+            timerObj: null,
+            txtCount: 0,
+            fbnCount: 0
+        },
+        methods: {
+            // 남은 시간 동안 1초에 restSec 1씩 감소
+            startCount: function() {
+                this.inputText = '';
+                this.display = 'none';
+                this.fbnCount = 0;
+                this.restSec = this.myNumber;
+                this.timerObj = setInterval(()=> {
+                    this.restSec--;
+                }, 1000);
+                this.rvsDisabled = true;
+                this.disabled = false;
+            }
+        },
+        watch: {
+            // 입력한 문자열을 감지
+            inputText: function() {
+                var fbnTxt = this.myText.split(',');
+                for (var i=0; i<fbnTxt.length; i++) {
+                    var pos = this.inputText.indexOf(fbnTxt[i]);
+                    if (pos > -1) {
+                        alert(fbnTxt[i]+"는 입력할 수 없습니다."); this.fbnCount++;
+                        // 입력문자에서 금지문자를 삭제
+                        // substr은 특정 위치에서 시작하여 특정 문자 수 만큼의 문자들을 반환
+                        this.inputText = this.inputText.substr(0, pos);
+                        this.restSec += 10;
+                    }
+                }
+                this.txtCount = this.inputText.length;
+            },
+            // 0초 이하가 되면 얼럿을 띄우고 타이머를 중지
+            restSec: function() {
+                if(this.restSec <= 0) {
+                    alert("제한시간입니다.");
+                    clearInterval(this.timerObj);
+                    this.rvsDisabled = false;
+                    this.disabled = true;
+                    this.display = '';
+                }
+            }
+        }
+    })
+</script>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>week10</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <h2>애니메이션이 들어간 숫자 배열 조작과 구구단 출력</h2>
+    <div id="app">
+        <transition-group name="li">
+            <li v-for="(item,index) in dataArray" :key="item">
+                {{ item }}　
+                <button @click="modData(index)">변경</button>
+                <button @click="delData(index)">삭제</button>
+            </li>
+        </transition-group><br>
+        <button @click="addData">추가</button>
+        <button @click="sortData">소트</button>
+        <button @click="shuffleData">셔플</button>
+        <button @click="showgugu">구구단 보이기</button>
+        <transition name="gugu">
+            <ul v-if="display"><template>
+            <li v-for="item1 in dataArray">
+                <p v-for="item2 in 9">
+                    {{ item1 }} x {{ item2 }} = {{ item1 * item2 }}
+                </p>
+            </li>
+            </template></ul>
+        </transition>
+    </div>
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            dataArray: [2,3,4,5,6,7,8,9],
+            display: false,
+            tog: 0
+        },
+        methods: {
+            // 리스트 변경
+            modData: function(index) {
+                var data = this.dataArray[index];
+                if(data != 1)
+                    this.dataArray.splice(index, 1, data+100);
+                else
+                    this.dataArray.splice(index, 1, data+1);
+            },
+            // 리스트 삭제
+            delData: function(index) {
+                this.dataArray.splice(index, 1);
+            },
+            // 리스트 추가
+            addData: function() {
+                var lastIdx = this.dataArray.length;
+                this.dataArray.push(this.dataArray[lastIdx-1]+1);
+            },
+            // 순서대로 정렬
+            sortData: function() {
+                this.dataArray.sort(function(a,b) {
+                    if (a < b) return -1;
+                    if (a > b) return 1;
+                    return 0;
+                });
+            },
+            // 무작위로 셔플
+            shuffleData: function() {
+                var buffer = [];
+                var len = this.dataArray.length;
+                for (var i=len; len>0; len--) {
+                    var r = Math.floor(Math.random() * len);
+                    buffer.push(this.dataArray[r]);
+                    this.dataArray.splice(r, 1);
+                }
+                this.dataArray = buffer;
+            },
+            showgugu: function() {
+                if (this.tog == 0) { // 보이게
+                    this.display = true;
+                    this.tog = 1;
+                    return;
+                }
+                else { // 안 보이게
+                    this.display = false;
+                    this.tog = 0;
+                    return;
+                }
+            }
+        }
+    }) 
+</script>
+<style>
+    /* 추가 시 페이드 인 */
+    .li-enter-active {
+        transition: 1s;
+    }
+    .li-enter {
+        opacity: 0;
+        transform: translateX(20px)
+    }
+    /* 삭제 시 오른쪽으로 페이드 아웃 */
+    .li-leave-active {
+        transition: 0.5s;
+    }
+    .li-leave-to {
+        opacity: 0;
+        transform: translateX(20px)
+    }
+    /* 소트 시 무브에 2초 */
+    .li-move {
+        transition: 2s;
+    }
+    
+    /* 구구단 페이드 인,아웃 */
+    .gugu-enter-active, .gugu-leave-active {
+        transition: 1s;
+    }
+    .gugu-enter, .gugu-leave-to {
+        opacity: 0;
+        transform: translateY(20px)
+    }
+</style>
+</html>

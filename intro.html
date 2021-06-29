@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>INTRO</title>
+    <link rel="stylesheet" href="style.css" >
+    <link rel="stylesheet" href="intro.css" >
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+
+<body>
+    <h2>간단한 자기소개</h2>
+    <p>안녕하세요, 동양미래대 컴소과 엄지희입니다.<br>
+        intro.json 파일을 선택해 자기소개를 열람하세요.
+    </p>
+    <div id="app">
+        <input type="file" @change="loadData">
+        <my-intro-list v-if="listOk" :object="dataArray['intro']"></my-intro-list>
+    </div>
+    <script>
+        var MyIntroList = {
+            props: ["object"],
+            template: '<div><table id="list">\n' +
+                            '<tr>\n' +
+                                '<th style="width:100px">Q&A 번호</th>\n' +
+                                '<th style="width:100px">Q</th>\n' +
+                                '<th style="width:350px">A</th>\n' +
+                            '</tr>\n' +
+                            '<tr v-for="item in object" v-bind:key="item.no">\n' +
+                                '<td>{{ item.no }}</td>\n' +
+                                '<td v-on:click="boardRead(item)">{{ item.qus }}</td>\n' +
+                                '<td>{{ item.ans }}</td>\n' +
+                            '</tr>\n' +
+                        '</table></div>'
+        }
+        new Vue({
+            el: '#app',
+            data: {
+                dataArray: [],
+                listOk: false,
+            },
+            components: {
+                'my-intro-list': MyIntroList
+            },
+            methods: {
+                loadData: function(e) {
+                    file = e.target.files[0]
+						if (file) {
+							var reader = new FileReader()
+							var vm = this;
+                            reader.readAsText(file);
+							reader.onload = function(e){
+								vm.dataArray = JSON.parse(e.target.result);
+							};
+                            reader.onloadend = function(e) {
+                                if(vm.dataArray != null && vm.dataArray['intro'].length > 0) {
+                                    vm.listOk = true;
+                                }
+                                else vm.listOk = false;
+                        }
+					}
+                }
+            }
+        })
+    </script>
+</body>
+</html>

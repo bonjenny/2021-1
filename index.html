@@ -1,0 +1,116 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>MAIN</title>
+    <link rel="stylesheet" href="main.css">
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <!-- header -->
+    <header id="header">
+        <div id="head">
+            <h1><a href="intro.html"><img src="logo.png" alt="로고"></a>　　HOME　　　　</h1>
+        </div>
+    </header>
+
+    <!-- navigator -->
+    <nav id="link">
+        <div>
+            <button @click="btn1">1분기</button>
+            <button @click="btn2">2분기</button>
+        </div>
+        <ul>
+            <transition-group name="li1">
+                <li v-for="item in menu1" :key="item"><a :href=item>{{ item.slice(0,6) }}</a></li>
+            </transition-group>
+        </ul>
+        <ul>
+            <transition-group name="li2">
+                <li v-for="item in menu2" :key="item"><a :href=item>{{ item.slice(0,6) }}</a></li>
+            </transition-group>
+        </ul>
+    </nav>
+    
+    <!-- section -->
+    <div id="wrapper">
+        <h2>자기소개</h2>
+        <p>컴퓨터소프트웨어공학과<br>
+            2학년 YA반 20202865 엄지희</p><br>
+        <div>
+            <a href="intro.html">자세히 보기</a>
+        </div>
+    </div><br><hr>
+
+    <!-- footer -->
+    <footer id="footer">
+        <p>
+            Copyright(C) 2020 UI
+            서울시 구로동 111-11번지 OO대학교 학생회관 214호 TEL: 222-2220
+            관리자: admin@ddd.ac.kr
+        </p>
+    </footer>
+</body>
+</html>
+<script>
+    new Vue({
+        el: '#link',
+        data: {
+            menu1: [],
+            menu2: [],
+            isShow1: false,
+            isShow2: false,
+        },
+        methods: {
+            btn1: function() {
+                if(this.isShow1 == false) {
+                    var v = ['week01.html','week02.html','week03.html','week04.html',
+                    'week05.html','week06.html','week07.html'];
+                    for (var i=0; i<v.length; i++) {
+                        this.menu1.push(v[i]);
+                    }
+                    this.isShow1 = true;
+                }
+                else {
+                    this.menu1 = [];
+                    this.isShow1 = false;
+                }
+            },
+            btn2: function() {
+                if(this.isShow2 == false) {
+                    var v = ['week08.html','week09.html','week10.html','week11.html',
+                    'week12.html','week13.html','week14.html'];
+                    for (var i=0; i<v.length; i++) {
+                        this.menu2.push(v[i]);
+                    }
+                    this.isShow2 = true;
+                }
+                else {
+                    this.menu2 = [];
+                    this.isShow2 = false;
+                }
+            }
+        }
+    })
+</script>
+<style>
+    /* 나타나고 있을 때와 사라질 때는 0.5초 */
+    .li1-enter-active, .li1-leave-active {
+        transition: 0.5s;
+    }
+    /* 나타나기 전의 상태와 사라진 상태는 투명도가 0 */
+    .li1-enter, .li1-leave-to {
+        opacity: 0;
+    }
+    
+    /* 나타나고 있을 때와 사라질 때는 0.5초 */
+    .li2-enter-active, .li2-leave-active {
+        transition: 0.5s;
+    }
+    /* 나타나기 전의 상태와 사라진 상태는 투명도가 0 */
+    .li2-enter, .li2-leave-to {
+        opacity: 0;
+    }
+</style>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuejs Sample</title>
+    <style>
+
+        html {
+            width: 80%;
+            margin-right: auto;
+            margin-left: auto;
+            margin-bottom: 100px;
+            font-family: sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        button {
+            font-family: inherit;
+            font-size: inherit;
+            line-height: inherit;
+        }
+
+        table {
+            width: 100%;
+            max-width: 768px;
+            text-align: center;
+        }
+
+        table th {
+            max-width: 40px;
+            padding: 12px;
+            border-bottom: 3px solid darkgray;
+        }
+
+        table td {
+            max-width: 20px;
+            padding: 12px;
+        }
+
+        table tr:nth-of-type(even) td:not(.btn) {
+            background-color: rgba(26, 74, 163, 0.1)
+        }
+
+        table .btn {
+            max-width: 10px;
+            padding: 10px 0px 10px 20px;
+        }
+
+        button {
+            cursor: pointer;
+            max-width: 100px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #fff;
+            border: 2px;
+            background-color: #0f74e0;
+            transition: background-color .2s
+        }
+
+        button:hover {
+            background-color: #0561c4;
+        }
+
+        button:active {
+            background-color: #003c7c;
+        }
+
+        button:disabled {
+            opacity: .5;
+            pointer-events: none;
+        }
+
+        table td button {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 15px 0px;
+        }
+
+        table tr:nth-of-type(odd) .btn button {
+            background-color: #1d53c7;
+            transition: background-color .2s
+        }
+
+        table tr:nth-of-type(odd) .btn button:hover {
+            background-color: #1e41b1;
+        }
+
+        table tr:nth-of-type(odd) .btn button:active {
+            background-color: #00367c;
+        }
+
+    </style>
+
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+</head>
+<body>
+    <h2>Google Charts의 막대그래프에 버튼으로 투표할 수 있는 예제</h2>
+
+    <!-- 구글 차트가 표시될 영역 -->
+    <!-- 새로고침 버튼을 누르면 가로 크기 바뀜 -->
+    <div id="chart_div" style="width: 100%; max-width: 800px; height: 500px;"></div>
+
+    <!-- 투표 버튼 표시되는 영역 -->
+    <div id="app">
+        <h3>선호하는 야식 메뉴 투표</h3>
+        <table>
+            <thead>
+                <th>종류</th>
+                <th>현재 투표수</th>
+            </thead>
+            <tbody>
+                <tr v-for="(item, c) in dataArray" v-if="c>0">
+                    <td> {{ item[0] }} </td>
+                    <td> {{ item[1] }} </td>
+                    <td class="btn"><button v-on:click="addOne(c)">한표추가</button></td>
+                    <td class="btn"><button v-on:click="subOne(c)">한표빼기</button></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // 그래프에 사용할 데이터
+        var orgdata = [
+            ['종류', '개수'],
+            ['곱창', 2], ['치킨', 6], ['라면', 14],
+            ['피자', 5], ['떡볶이', 3], ['족발', 1]
+        ];
+        google.charts.load('current', { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawBasic);
+
+        // 그래프를 그리는 함수
+        function drawBasic() {
+            var data = google.visualization.arrayToDataTable(orgdata);
+            var options = {title: '선호하는 야식', "is3D": true};
+            var chart = new google.visualization.BarChart( // 막대그래프
+                document.getElementById('chart_div')
+            );
+            chart.draw(data, options);
+        }
+
+        // Vue 시작
+        new Vue({
+            el: '#app',
+            data: {
+                dataArray: orgdata
+            },
+            methods: {
+                addOne: function(val) {
+                    var obj = this.dataArray[val];
+                    obj[1]++; // 투표수 Up
+                    // dataArray[val] = obj; 는 안됨
+                    this.dataArray.splice(val, 1, obj);
+                    drawBasic(); // 그래프 그리기
+                },
+                subOne: function(val) {
+                    var obj = this.dataArray[val];
+                    obj[1]--; // 투표수 Down
+                     // dataArray[val] = obj; 는 안됨
+                    this.dataArray.splice(val, 1, obj);
+                    drawBasic(); // 그래프 그리기
+                }
+            }
+        })
+    </script>
+</body>
+</html>

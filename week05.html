@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vuejs Sample</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <h2>간단한 계산기</h2>
+    <div id="app">
+        <input type="text" v-model.number="a">
+        <input type="text" v-model.number="b"><br><br>
+        <button v-on:click="addCal">덧셈계산</button>
+        <button v-on:click="subCal">뺄셈계산</button>
+        <button v-on:click="mulCal">곱셈계산</button>
+        <button v-on:click="divCal">나눗셈계산</button>
+        <p>결과는 {{ result }} 입니다.</p>
+    </div>
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                a: 0,
+                b: 0,
+                result: 0
+            },
+            methods: {
+                addCal: function() {
+                    this.result = this.a + this.b
+                },
+                subCal: function() {
+                    this.result = this.a - this.b
+                },
+                mulCal: function() {
+                    this.result = this.a * this.b;
+                },
+                divCal: function() {
+                    this.result = this.a / this.b;
+                }
+            }
+        })
+    </script>
+</body>
+</html>

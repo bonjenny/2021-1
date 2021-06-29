@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Vue.js sample</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- 개발버전, 도움되는 콘솔 경고를 포함. -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+</head>
+<body>
+    <h2>입력폼 활용</h2>
+    <div id="app">
+        <label>이름: <input v-model.lazy="myName" placeholder="홍길동"></label><br><br>
+
+        <label>좋아하는 색은: <br>
+            <input v-model="myColor" type="radio" value="red">빨강<br>
+            <input v-model="myColor" type="radio" value="green">초록<br>
+            <input v-model="myColor" type="radio" value="blue">파랑<br>
+            <input v-model="myColor" type="radio" value="yellow">노랑<br>
+            <input v-model="myColor" type="radio" value="gray">회색<br>
+        </label><br>
+        
+        <label>좋아하는 계절은: <br>
+            <input v-model="mySeason" type="radio" value="spring.png">봄<br>
+            <input v-model="mySeason" type="radio" value="summer.png">여름<br>
+            <input v-model="mySeason" type="radio" value="fall.png">가을<br>
+            <input v-model="mySeason" type="radio" value="winter.png">겨울<br>
+        </label>
+
+        <p>내가 선택한 이미지는 {{ mySeason }} 입니다.</p>
+
+        <p>
+            나는 {{ myName }} 이고 좋아하는 색은 
+            <span v-bind:style="{ color:myColor }">{{ myColor }}</span>, <br>
+            파일명을 분리하면 {{ aftermySeason = mySeason.split('.') }} 입니다.<br>
+            좋아하는 계절은 {{ aftermySeason[0] }} 입니다.
+        </p>
+
+        <img v-bind:src="mySeason" width="400px">
+    </div>
+    <script>
+        new Vue({
+            el: "#app" , 
+            data: {
+                myName: '' ,
+                myColor: '',
+                mySeason: ''
+            }
+        })
+    </script>
+</body>
+</html>
